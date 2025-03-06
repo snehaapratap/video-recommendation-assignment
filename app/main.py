@@ -2,6 +2,8 @@ from fastapi import FastAPI, Query, HTTPException
 import requests
 import os
 from dotenv import load_dotenv
+from app.recommendation import train_model
+
 
 load_dotenv()
 
@@ -26,3 +28,11 @@ def get_personalized_feed(username: str, category_id: int = None):
         posts = [post for post in posts if post["category_id"] == category_id]
     
     return {"username": username, "recommended_videos": posts[:10]}
+
+
+@app.get("/train")
+def train():
+    data = {"features": np.random.rand(100, 5), "labels": np.random.randint(0, 10, size=(100,))}
+    model = train_model(data)
+    return {"message": "Model trained successfully"}
+
